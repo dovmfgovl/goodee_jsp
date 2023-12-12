@@ -1,0 +1,13 @@
+package com.example.demo.pojo2;
+
+import com.vo.EmpVO;
+
+public class BoardVOTest {
+
+	public static void main(String[] args) {
+		//lombok 적용의 좋은 점을 알아보자.
+		//lombok 적용되지 않은 경우) 
+		EmpVO evo = new EmpVO(3, "나잘난"); //public EmpVO(int empno)
+	}
+
+}

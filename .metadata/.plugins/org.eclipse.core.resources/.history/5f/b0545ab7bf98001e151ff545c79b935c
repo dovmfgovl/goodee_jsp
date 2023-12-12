@@ -1,0 +1,7 @@
+package com.example.demo.pojo2;
+
+//나는 Controller라는 인터페이스를 상속받지 않아서 어떤 제약조건도 해당 안 됨
+//나는 순수한 자바 클래스이다.
+public class BoardLogic {
+
+}

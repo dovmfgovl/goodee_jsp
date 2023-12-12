@@ -1,0 +1,16 @@
+package com.vo;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data //@Setter, @Getter
+@NoArgsConstructor
+public class BoardVO {
+	private String b_no      =0;//     
+	private String b_title   =null;//     
+	private String b_writer  =null;//     
+	private String b_content =null;//     
+	private String b_hit    =null;//     
+	private String b_date    =null;//     
+	private String b_file    =null;//     
+}

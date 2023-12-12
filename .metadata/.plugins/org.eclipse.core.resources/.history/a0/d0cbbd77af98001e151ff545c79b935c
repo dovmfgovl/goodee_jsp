@@ -1,0 +1,8 @@
+package com.vo;
+
+import lombok.Data;
+
+@Data //@Setter, @Getter
+public class BoardVO {
+
+}
