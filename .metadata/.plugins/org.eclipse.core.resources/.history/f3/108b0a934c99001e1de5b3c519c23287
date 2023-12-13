@@ -1,0 +1,57 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>게시판(webapp)</title>
+	<%@include file="/common/bootstrap_common.jsp" %>
+	<link rel="stylesheet" href>
+</head>
+<body>
+	
+	
+		<!-- ========================== [[ 게시판 Modal ]] ========================== -->
+	<div class="modal" id="boardForm">
+	  <div class="modal-dialog modal-dialog-centered">
+	    <div class="modal-content">
+	
+	      <!-- Modal Header -->
+	      <div class="modal-header">
+	        <h4 class="modal-title">게시판</h4>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+	      </div>
+	      <!-- Modal body -->
+	      <div class="modal-body">
+	      	<!-- <form id="f_board" method="get" action="./boardInsert.pj2"> -->
+	      	<form id="f_board" method="post" enctype="multipart/form-data" action="./boardInsert.pj2">
+	      	  <input type="hidden" name="method" value="boardInsert">
+	          <div class="form-floating mb-3 mt-3">
+	            <input type="text"  class="form-control" id="b_title" name="b_title" placeholder="Enter 제목" />
+	            <label for="b_title">제목</label>
+	          </div>	      	
+	          <div class="form-floating mb-3 mt-3">
+	            <input type="text"  class="form-control" id="b_writer" name="b_writer" placeholder="Enter 작성자" />
+	            <label for="b_writer">작성자</label>
+	          </div>	      	
+	          <div class="form-floating mb-3 mt-3">
+	            <textarea rows="5" class="form-control h-25" aria-label="With textarea" id="b_content" name="b_content"></textarea>
+			  </div>	
+		      <div class="input-group mb-3">
+				  <input type="file" class="form-control" id="b_file" name="b_file">
+				  <label class="input-group-text" for="b_file">Upload</label>
+			  </div>      	
+	      	</form>
+	      </div>	
+	      <div class="modal-footer">
+	        <input type="button" class="btn btn-warning" data-bs-dismiss="modal" onclick="boardInsert()"  value="저장">
+	        <input type="button" class="btn btn-danger" data-bs-dismiss="modal" value="닫기">
+	      </div>
+	
+	    </div>
+	  </div>
+	</div>
+    <!-- ========================== [[ 게시판 Modal ]] ========================== -->
+    
+</body>
+</html>

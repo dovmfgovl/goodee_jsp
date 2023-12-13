@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<!-- 
+자바와 오라클 사이의 타입이 다르다 - 언어가 다르니까
+타입이 다르다 : XXXVO패턴
+jdbcType이 별도로 존재한다
+-->
+ 	<settings>
+    	<setting name="jdbcTypeForNull" value="NULL" /> <!-- null값도 허용하겠다 -->
+    </settings>
+  	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="UNPOOLED">
+				<property name="driver" value="oracle.jdbc.driver.OracleDriver" /> 
+				<!-- <property name="driver" value="com.p6spy.engine.spy.P6SpyDriver"/>  -->
+				<property name="url" value="jdbc:oracle:thin:@127.0.0.1:1521:orcl11" />
+				<property name="username" value="scott" />
+				<property name="password" value="tiger" />
+			</dataSource>
+		</environment>
+	</environments> 
+	<mappers>
+		<mapper resource="com/mybatis/mapper/test.xml" />
+		<mapper resource="com/mybatis/mapper/notice.xml" />
+		<mapper resource="com/mybatis/mapper/board.xml" />
+	</mappers>
+</configuration>

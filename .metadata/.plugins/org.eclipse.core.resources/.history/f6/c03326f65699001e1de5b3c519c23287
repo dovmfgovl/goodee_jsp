@@ -1,0 +1,8 @@
+package com.example.demo.pojo2;
+
+import org.apache.log4j.Logger;
+
+public class BoardDao {
+	Logger logger = Logger.getLogger(BoardDao.class);
+
+}

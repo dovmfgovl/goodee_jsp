@@ -2,7 +2,14 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
- <settings>
+<!-- 
+자바와 오라클 사이의 타입이 다르다 - 언어가 다르니까
+타입이 다르다 : XXXVO패턴
+jdbcType이 별도로 존재한다 : null에 대한 이슈가 존재함 - 태그 내에서 하나씩 별도로 처리하는 방법도 가능함
+일괄처리 방법 : 아래 코드임
+아래 코드가 없는 경우) 오라클 서버의 not null, null, 여부와 상관없이 발동됨
+-->
+ 	<settings>
     	<setting name="jdbcTypeForNull" value="NULL" /> <!-- null값도 허용하겠다 -->
     </settings>
   	<environments default="development">
@@ -20,5 +27,6 @@
 	<mappers>
 		<mapper resource="com/mybatis/mapper/test.xml" />
 		<mapper resource="com/mybatis/mapper/notice.xml" />
+		<mapper resource="com/mybatis/mapper/board.xml" />
 	</mappers>
 </configuration>
