@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="java.util.*" %>
+<%@ page import="java.util.*, com.util.BSPageBar"%>
  <% 
 	List<Map<String, Object>> bList = (List)request.getAttribute("bList"); 
  	int size = 0;//총 레코드 수
@@ -8,6 +8,15 @@
  		size = bList.size(); //4 출력
  	}
  	//out.print(bList);
+ 	
+ 	//한 페이지에 몇 개씩 뿌릴거야?
+ 	//1(26, 25, 24, 23, 22) 2(21, 20, 19, 18, 17) 3(16, 15, 14, 13, 12) > 4(11, 10, 9, 8, 7) 5(6, 5, 4, 3, 2) 6(1)
+ 	int numPerPage = 3;		
+ 	int nowPage = 0;
+ 	//Servlet이 아님으로 request 다 적어야 함
+ 	if(request.getParameter("nowPage") != null){
+ 		nowPage = Integer.parseInt(request.getParameter("nowPage"));
+ 	}
  %>
 <!DOCTYPE html>
 <html>
@@ -29,8 +38,36 @@ TOMCAT(웹서버{apache사용함 : 정적페이지}+웹컨테이너 - jsp : api.
 	<%@include file="/common/bootstrap_common.jsp" %>
 	<link rel="stylesheet" href="/css/board.css">
 	<script type="text/javascript">
-		function boardList(){
+		const searchEnter = (event) => {
+			console.log('searchEnter')
+			console.log(window.event.keyCode); //13
+			if(window.event.keyCode == 13){
+				boardSearch(); //재사용성				
+			}			
+		}///end of searchEnter
+		
+		const boardSearch = () => {
+			console.log('boardSearch');
+			const gubun = document.querySelector("#gubun").value;
+			const keyword = document.querySelector("#keyword").value;
+			console.log(`${gubun} , ${keyword}`);
+			location.href="/board/boardList.gd2?gubun="+gubun+"&keyword="+keyword;	
+		}///end of boardSearch
+		
+		const boardList = () => {
 			location.href="/board/boardList.gd2"
+		}
+		
+		const boardInsert = () => {
+			//<input type=text name=b_title/>
+			//<input type=text name=b_content/>
+			//<input type=text name=b_writer/>
+			//Enumeration<String> em = req.getParameterNames();
+			document.querySelector("#f_board").submit(); //form태그에 묶인 컴퍼넌트 값들이 전송됨
+		}
+		
+		const fileDown = (b_file) => { //b_file=바나나우유.jpg
+			location.href="downLoad.jsp?b_file="+b_file;
 		}
 	</script>
 </head>
@@ -59,7 +96,7 @@ TOMCAT(웹서버{apache사용함 : 정적페이지}+웹컨테이너 - jsp : api.
 		           aria-label="검색어를 입력하세요" aria-describedby="btn_search" onkeyup="searchEnter()"/>
 			</div>
 			<div class="col-3">
-		 		<button id="btn_search" class="btn btn-danger" onClick="boardSearch()">검색</button>
+		 		<button id="btn_search" class="btn btn-danger" onclick="boardSearch()">검색</button>
 		 	</div>
 		</div>		
 		<!-- 검색기 끝 -->
@@ -82,13 +119,20 @@ TOMCAT(웹서버{apache사용함 : 정적페이지}+웹컨테이너 - jsp : api.
 						//n건을 조회하는 경우이지만 resultType에는 map이나 vo패턴을 주는게 맞다
 						//주의사항 - 자동으로 키값을 생성함 - 디폴트가 대문자이다
 						//myBatis연동시 resultType=map{한행}으로 줌 -> selectList("noticeList", pMap)
-						for(int i=0;i<size;i++){
+						//for(int i=0;i<size;i++){ //페이징 처리 이전 코드
+						for(int i=nowPage*numPerPage; i<(nowPage*numPerPage)+numPerPage; i++){
+							if(size == i) break;
 							Map<String,Object> rmap = bList.get(i);
 					%>					
 										<tr>
 											<td><%=rmap.get("B_NO") %></td>
 											<td><%=rmap.get("B_TITLE") %></td>
-											<td><%=rmap.get("B_FILE") %></td>
+											<td>
+											<!-- 자바스크립트에서는 값 앞 뒤에 싱글 또는 더블 쿼테이션을 붙이지 않으면 변수 취급 받음 
+													XXXX is undefined 에러 보게 된다
+											-->
+											<a href="javascript:fileDown('<%= rmap.get("B_FILE") %>')"><%=rmap.get("B_FILE") %></a>
+											</td>
 											<td><%=rmap.get("B_WRITER") %></td>
 											<td><%=rmap.get("B_HIT") %></td>
 										</tr>					
@@ -101,6 +145,11 @@ TOMCAT(웹서버{apache사용함 : 정적페이지}+웹컨테이너 - jsp : api.
 <!-- [[ Bootstrap 페이징 처리  구간  ]] -->
 	<div style="display:flex;justify-content:center;">
 	<ul class="pagination">
+<% 
+	String pagePath = "boardList.gd2";
+	BSPageBar bspb = new BSPageBar(numPerPage, size, nowPage, pagePath);
+	out.print(bspb.getPageBar());
+%>
 	</ul>
 	</div>
 <!-- [[ Bootstrap 페이징 처리  구간  ]] -->		  
@@ -133,7 +182,7 @@ TOMCAT(웹서버{apache사용함 : 정적페이지}+웹컨테이너 - jsp : api.
 	      <!-- Modal body -->
 	      <div class="modal-body">
 	      	<!-- <form id="f_board" method="get" action="./boardInsert.pj2"> -->
-	      	<form id="f_board" method="post" enctype="multipart/form-data" action="./boardInsert.pj2">
+	      	<form id="f_board" method="post" enctype="multipart/form-data" action="./boardInsert.gd2">
 	      	  <input type="hidden" name="method" value="boardInsert">
 	          <div class="form-floating mb-3 mt-3">
 	            <input type="text"  class="form-control" id="b_title" name="b_title" placeholder="Enter 제목" />

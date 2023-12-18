@@ -26,19 +26,20 @@ public class HashMapBinder {
 	public void multiBind(Map<String, Object> pMap) {
 		pMap.clear(); //기존에 들어있는 정보는 비운다 : 초기화와 연관된 행동
 		try {
+			//첨부파일 업로드 되는 지점
 			multi = new MultipartRequest(req, realFolder, maxSize, encType, new DefaultFileRenamePolicy());
 		} catch (Exception e) {
 			logger.info(e.toString());
 		}
-		//첨부파일이 아닌 다른 정보들에 대해서도 담아준다
-		Enumeration<String> em = req.getParameterNames();
+		//첨부파일이 아닌 다른 정보들에 대해서도 담아준다 - enctype = multipart/form-data일 때
+		Enumeration<String> em = multi.getParameterNames(); //req로는 가져오지 못함으로 multi로 바꿔야 함
 		while(em.hasMoreElements()) {
 			//키값 꺼내기
 			String key = em.nextElement();//n_title, n_content, n_writer
-			pMap.put(key, req.getParameter(key));
+			pMap.put(key, multi.getParameter(key));
 		}////////////// end of while
+		logger.info(pMap.toString());
 		
-		//첨부파일에 대한 처리
 		Enumeration<String> files = multi.getFileNames();
 		String fullPath = null; //파일 정보에 대한 전체경로
 		String filename = null; //파일이름
@@ -50,7 +51,7 @@ public class HashMapBinder {
 			while(files.hasMoreElements()) {
 				String fname = files.nextElement();
 				filename = multi.getFilesystemName(fname);
-				pMap.put("bs_file", filename);//avartar.png
+				pMap.put("b_file", filename);//avartar.png
 				//File객체 생성하기
 				file = new File(realFolder+"\\"+filename);
 			}
@@ -63,12 +64,13 @@ public class HashMapBinder {
 	 * 
 	 * @param pMap -  필요한 클래스 주입 - 선언자리이지 생성자리 아님
 	 *****************************************************************/
-	public void bind(Map<String,Object> pMap) {
+	public void bind(Map<String,Object> pMap) { //BoardController에서 주입해준다
 		pMap.clear();
 		//<input type="text" name="n_title">
 		//<input type="text" name="n_content">
 		//<input type="text" name="n_writer">
-		Enumeration<String> em = req.getParameterNames();
+		Enumeration<String> em = req.getParameterNames(); //req.getParameterNames(); 얘만 변화함. 파라미터에 있는 pMap에 주입됨
+		//logger.info(em.hasMoreElements()); //true여야 반복문 처리됨
 		while(em.hasMoreElements()) {
 			//키값 꺼내기
 			String key = em.nextElement();//n_title, n_content, n_writer

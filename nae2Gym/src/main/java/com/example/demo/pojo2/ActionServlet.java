@@ -72,7 +72,10 @@ public class ActionServlet extends HttpServlet {
 				//치환을 한 번 더 함
 				String path = pageMove[1]; // board/boardList
 				if("redirect".equals(pageMove[0])) {
-					res.sendRedirect("/"+path+".jsp"); // board/boardList.jsp
+					res.sendRedirect(path); // board/boardList.jsp
+					//forward 처리 시와 동일한 컨벤션을 적용하기 위해 접두어와 접미어를 붙이는 과정에서 오류 발동함.
+					//현재 구조 상 입력|수정|삭제 모두 처리 성공 시 목록 페이지로 응답이 나가도록 설계 되어 있다는 것을 간과함.
+					//res.sendRedirect("/"+path+".jsp"); // board/boardList.gd2.jsp
 				}// end of sendRedirect
 				else if("forward".equals(pageMove[0])) {
 					RequestDispatcher view = req.getRequestDispatcher("/"+path+".jsp");

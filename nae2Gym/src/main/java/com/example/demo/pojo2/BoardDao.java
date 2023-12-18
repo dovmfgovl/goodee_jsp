@@ -52,11 +52,12 @@ public class BoardDao {
 
 	public int boardUpdate(Map<String, Object> pMap) {
 		logger.info("boardUpdate");
+		logger.info(pMap);
 		int result = 0;
 		sqlSessionFactory = MyBatisCommonFactory.getSqlSessionFactory();
 		SqlSession sqlSession = sqlSessionFactory.openSession();
 		try {
-			result = sqlSession.insert("boardUpdate", pMap);			
+			result = sqlSession.update("boardUpdate", pMap);			
 			sqlSession.commit();//빼먹으면 물리적인테이블 반영안됨
 		} catch (Exception e) {
 			logger.info(e.toString());
@@ -70,7 +71,9 @@ public class BoardDao {
 		sqlSessionFactory = MyBatisCommonFactory.getSqlSessionFactory();
 		SqlSession sqlSession = sqlSessionFactory.openSession();
 		try {
-			result = sqlSession.insert("boardDelete", pMap);			
+			int b_no = Integer.parseInt(pMap.get("b_no").toString());
+			//insert(), update(), delete() 모두 id로 쿼리문을 찾는다. 따라서 insert를 적으나 delete로 적으나 처리는 됨
+			result = sqlSession.delete("boardDelete", b_no);		
 			sqlSession.commit();//빼먹으면 물리적인테이블 반영안됨
 		} catch (Exception e) {
 			logger.info(e.toString());

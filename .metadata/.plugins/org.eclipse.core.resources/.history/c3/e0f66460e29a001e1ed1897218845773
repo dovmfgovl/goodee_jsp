@@ -1,0 +1,6 @@
+package com.example.demo.pojo3;
+//if문 사용해서 직관적이지 못했던 부분을 따로 떼어낸다.
+// 왜냐하면 초보개발자들은 복잡하다고 생각하니까
+public class HandlerMapping {
+
+}

@@ -50,7 +50,7 @@ public class BoardController implements Controller {
 		String upmu[] = (String[])req.getAttribute("upmu");
 		String path = null;
 		Map<String, Object> pMap = new HashMap<>();
-		HashMapBinder hmb = new HashMapBinder(req);
+		HashMapBinder hmb = new HashMapBinder(req); //주입됨
 		//전체조회일 때 : select / n건 - List<Map | VO> - list.jsp
 		//상세보기와 응답페이지 이름이 달라서 메소드를 분리한다
 		// 1) 배포위치가 WEB-INF 일 때 : /WEB-INF/jsp/(workname)/메소드이름 or upmu[1].jsp
@@ -87,7 +87,10 @@ public class BoardController implements Controller {
 		else if("boardInsert".equals(upmu[1])) {//insert
 			logger.info("boardInsert");
 			int result = 0;
-			hmb.bind(pMap);
+			//hmb.bind(pMap);
+			//POST방식은 매번 동일한 url을 요청하더라도 무조건 서버를 경유함
+			//GET방식은 같은 url이면 인터셉트 당함(302번)
+			hmb.multiBind(pMap);//첨부파일이 포함된 POST방식의 처리일때만 - get방식은 무조건 첨부파일 안 됨
 			result = bLogic.boardInsert(pMap);
 			if(result == 1) { //글 등록 성공했을 때
 				path = "redirect:/board/boardList.gd2"; //jsp --(redirect)--> boardInsert.gd2 --(redirect)--> boardList.gd2 --(forward)--> jsp
@@ -100,7 +103,8 @@ public class BoardController implements Controller {
 		else if("boardUpdate".equals(upmu[1])) {//update
 			logger.info("boardUpdate");
 			int result = 0;
-			hmb.bind(pMap);
+			hmb.bind(pMap); //pMap.get(b_no) = 5
+			logger.info(pMap);
 			result = bLogic.boardUpdate(pMap);
 			if(result == 1) { //글 등록 성공했을 때
 				path = "redirect:/board/boardList.gd2";
@@ -116,6 +120,9 @@ public class BoardController implements Controller {
 			hmb.bind(pMap);
 			result = bLogic.boardDelete(pMap);
 			if(result == 1) { //글 등록 성공했을 때
+				//pageMove[0] = redirect
+				//pageMove[1] = /board/boardList.gd2
+				//path 정보를 upmu가 가져가나? pageMove에 담기는가?
 				path = "redirect:/board/boardList.gd2";
 			}else {
 				path = "redirect:/board/boardError.jsp";

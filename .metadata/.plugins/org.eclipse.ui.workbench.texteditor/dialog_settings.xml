@@ -8,6 +8,7 @@
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="jpg"/>
 			<item value="super.doDelete(req, resp);"/>
 			<item value="URI"/>
 			<item value="notice230527"/>
